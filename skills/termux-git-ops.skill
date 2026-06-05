@@ -1,0 +1,47 @@
+# Skill: Termux Git Operations and Environment Compatibility
+
+This skill instructs the agent on how to manage Git commits/pushes after task completion and how to execute commands correctly in the Termux environment to avoid path and execution errors.
+
+---
+
+## 1. Post-Task GitHub Synchronization
+
+After any significant change, feature implementation, or task completion:
+1. **Verify Git Status**: Run `git status` in the repository root (`/data/data/com.termux/files/home/Nestjs-svelte5-lavapp`).
+2. **Handle Nested Git Repositories**: Ensure no nested `.git` folders exist in subdirectories (like `user-api` or `user-web`) that could trigger Git submodule or indexing errors.
+3. **Stage Changes**: Run `git add .` to stage all modified files.
+4. **Create a Detailed Commit Message**: Write a clear, structured, and descriptive commit message that outlines what was added, modified, or removed, and the reason for the changes.
+5. **Commit and Push**:
+   - Commit: `git commit -m "<detailed-message>"`
+   - Push: `git push origin main` (or the active branch).
+6. **Report Status**: Inform the user about the push status and provide the commit details.
+
+---
+
+## 2. Termux Environment Command Compatibility
+
+In Termux (Android Linux environment), direct execution of Node.js package binaries inside `node_modules/.bin` often fails because the shebang line (`#!/usr/bin/env node`) references a path `/usr/bin/env` which does not exist in Termux by default.
+
+To prevent command failures, follow these execution guidelines:
+
+### A. Running Svelte 5 / Vite Commands
+* **Do NOT run**: `npm run build` or `npx vite build` (can fail with `sh: 1: vite: not found`).
+* **DO run**: Execute the Vite script directly using node:
+  * **Build**: `node node_modules/vite/bin/vite.js build`
+  * **Development Server**: `node node_modules/vite/bin/vite.js dev`
+  * **Preview**: `node node_modules/vite/bin/vite.js preview`
+
+### B. Running NestJS Commands
+* **Do NOT run**: `npm run build` or `nest build` if it relies on NestJS CLI binary execution without direct paths.
+* **DO run**: Execute using the local CLI entrypoint with Node:
+  * **Build**: `node node_modules/@nestjs/cli/bin/nest.js build`
+  * **Start Dev Server**: `node node_modules/@nestjs/cli/bin/nest.js start --watch`
+  * **Start Production Server**: `node node_modules/@nestjs/cli/bin/nest.js start`
+
+### C. Installing NPM Packages
+* If dependency conflicts arise (e.g., peer dependency issues with TypeScript versions or React/Svelte packages), use the `--legacy-peer-deps` flag:
+  * **Command**: `npm install --legacy-peer-deps`
+
+### D. General Command Execution
+* Always set `Cwd` explicitly in the tool arguments to the correct directory (`user-api` or `user-web`).
+* For long-running servers, start them in the background (using a low `WaitMsBeforeAsync` or letting them run asynchronously), and verify their status via `manage_task`.

@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { authStore } from '$lib/features/auth/services/auth-store.svelte';
+  import PageFrame from '$lib/components/layout/PageFrame.svelte';
 
   let { children } = $props();
 
@@ -36,10 +37,20 @@
   }
 </script>
 
+<svelte:head>
+  <!-- Google Fonts para Tipografía Premium -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</svelte:head>
+
 {#if authStore.loading}
-  <div style="padding: 50px; text-align: center; font-family: sans-serif; color: white;">
+  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0f172a; font-family: sans-serif; color: white;">
     <h3>Verificando sesión...</h3>
   </div>
 {:else if authStore.user}
-  {@render children()}
+  <PageFrame>
+    {@render children()}
+  </PageFrame>
 {/if}
+

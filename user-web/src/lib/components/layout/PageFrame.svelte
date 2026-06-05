@@ -30,7 +30,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    padding: 20px 0;
+    padding: 0;
   }
 
   .page-frame {
@@ -38,7 +38,7 @@
     max-width: 1440px;
     /* Centrado con 2% a cada costado */
     margin: 0 auto;
-    min-height: calc(100vh - 40px);
+    min-height: 100vh;
     
     /* Efecto Glassmorphism Premium */
     background: rgba(15, 23, 42, 0.3);
@@ -47,7 +47,7 @@
     border-left: 1px solid rgba(255, 255, 255, 0.08);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
+    border-radius: 0;
     box-shadow: 
       0 4px 30px rgba(0, 0, 0, 0.4),
       inset 0 0 1px rgba(255, 255, 255, 0.1);

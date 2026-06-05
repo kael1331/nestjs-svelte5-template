@@ -1,5 +1,6 @@
 <script lang="ts">
   import { authStore } from '$lib/features/auth/services/auth-store.svelte';
+  import { navStore } from './nav-store.svelte';
 
   const user = $derived(authStore.user);
 
@@ -18,6 +19,15 @@
 
 <header class="dashboard-header">
   <div class="brand-section">
+    <!-- Botón de menú hamburguesa -->
+    <button class="hamburger-btn" onclick={() => navStore.toggleSidebar()} aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="12" x2="20" y2="12" />
+        <line x1="4" y1="6" x2="20" y2="6" />
+        <line x1="4" y1="18" x2="20" y2="18" />
+      </svg>
+    </button>
+
     <!-- SVG Animado de burbuja/remolino para "LavaApp" -->
     <svg class="brand-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="50" cy="50" r="40" stroke="url(#gradient-accent)" stroke-width="6" stroke-dasharray="20 10" class="spinner" />
@@ -80,6 +90,31 @@
     display: flex;
     align-items: center;
     gap: 14px;
+  }
+
+  .hamburger-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin-right: -4px;
+  }
+
+  .hamburger-btn:hover {
+    color: #3b82f6;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+  }
+
+  .hamburger-btn svg {
+    width: 24px;
+    height: 24px;
   }
 
   .brand-logo {

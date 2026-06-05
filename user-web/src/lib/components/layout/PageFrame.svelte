@@ -1,9 +1,12 @@
 <script lang="ts">
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
+  import Sidebar from './Sidebar.svelte';
 
   let { children } = $props();
 </script>
+
+<Sidebar />
 
 <div class="page-outer-container">
   <div class="page-frame">
@@ -24,7 +27,6 @@
   .page-outer-container {
     min-height: 100vh;
     width: 100%;
-    /* Fondo espacial oscuro moderno */
     background: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 60%, #020617 100%);
     display: flex;
     align-items: center;
@@ -36,11 +38,8 @@
   .page-frame {
     width: 96%;
     max-width: 1440px;
-    /* Centrado con 2% a cada costado */
     margin: 0 auto;
     min-height: 100vh;
-    
-    /* Efecto Glassmorphism Premium */
     background: rgba(15, 23, 42, 0.3);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -51,7 +50,6 @@
     box-shadow: 
       0 4px 30px rgba(0, 0, 0, 0.4),
       inset 0 0 1px rgba(255, 255, 255, 0.1);
-    
     display: flex;
     flex-direction: column;
     overflow: hidden;

@@ -1,5 +1,11 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { authStore } from '$lib/features/auth/services/auth-store.svelte';
+  import { navStore } from '$lib/components/layout/nav-store.svelte';
+
+  onMount(() => {
+    navStore.reset('home');
+  });
 </script>
 
 <svelte:head>
@@ -7,26 +13,35 @@
 </svelte:head>
 
 <div class="dashboard-card">
-  <h2 class="dashboard-title">Panel de Control: Administrador</h2>
-  <div class="dashboard-content">
-    <p class="welcome-text">Gestión y control de operaciones.</p>
-    <div class="user-info-box">
-      <div class="info-row">
-        <span class="info-label">Nombre:</span>
-        <span class="info-value">{authStore.user?.name || 'Administrador'}</span>
+  <div class="tab-content">
+    {#if navStore.activeTab === 'home'}
+      <div class="content-panel">
+        <h3 class="panel-subtitle">Panel de Control: Administrador</h3>
+        <p class="welcome-text">Gestión y control de operaciones.</p>
+        
+        <div class="user-info-box">
+          <div class="info-row">
+            <span class="info-label">Nombre:</span>
+            <span class="info-value">{authStore.user?.name || 'Administrador'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email:</span>
+            <span class="info-value">{authStore.user?.email || 'N/A'}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Rol:</span>
+            <span class="info-value highlight">Administrador</span>
+          </div>
+        </div>
       </div>
-      <div class="info-row">
-        <span class="info-label">Email:</span>
-        <span class="info-value">{authStore.user?.email || 'N/A'}</span>
+    {:else if navStore.activeTab === 'operations'}
+      <div class="content-panel">
+        <h3 class="panel-subtitle">Operaciones Activas</h3>
+        <div class="admin-actions-placeholder">
+          <p>Supervisión y asignación de pedidos de lavandería, asignación de tareas de delivery y control de insumos en próximas fases.</p>
+        </div>
       </div>
-      <div class="info-row">
-        <span class="info-label">Rol:</span>
-        <span class="info-value highlight">Administrador</span>
-      </div>
-    </div>
-    <div class="admin-actions-placeholder">
-      <p>Acceso completo para supervisar pedidos de lavandería, asignar tareas de delivery, y controlar el inventario de insumos.</p>
-    </div>
+    {/if}
   </div>
 </div>
 
@@ -37,14 +52,17 @@
     padding: 0;
   }
 
-  .dashboard-title {
-    margin: 0 0 20px 0;
-    font-size: 26px;
-    font-weight: 700;
-    color: #f8fafc;
+  .content-panel {
+    padding: 16px 0;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .panel-subtitle {
+    margin: 0 0 12px 0;
+    font-size: 22px;
+    color: #f1f5f9;
     font-family: 'Outfit', sans-serif;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding-bottom: 12px;
   }
 
   .welcome-text {
@@ -54,13 +72,15 @@
   }
 
   .user-info-box {
-    background: rgba(15, 23, 42, 0.3);
+    background: rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     padding: 16px 20px;
     margin-bottom: 24px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    max-width: 400px;
   }
 
   .info-row {
@@ -91,4 +111,5 @@
     padding-left: 16px;
   }
 </style>
+
 

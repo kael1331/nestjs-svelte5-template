@@ -35,6 +35,29 @@ export class UsersService {
     });
   }
 
+  async findOneByEmail(email: string): Promise<User | null> {
+    return await this.usersRepository.findOneBy({ email });
+  }
+
+  async findOneByGoogleId(googleId: string): Promise<User | null> {
+    return await this.usersRepository.findOneBy({ googleId });
+  }
+
+  async updateGoogleId(id: number, googleId: string): Promise<User> {
+    const user = await this.findOne(id);
+    user.googleId = googleId;
+    return await this.usersRepository.save(user);
+  }
+
+  async createOAuthUser(data: { name: string; email: string; googleId: string }): Promise<User> {
+    const newUser = this.usersRepository.create({
+      name: data.name,
+      email: data.email,
+      googleId: data.googleId,
+    });
+    return await this.usersRepository.save(newUser);
+  }
+
   async findAll(): Promise<User[]> {
     return await this.usersRepository.find();
   }

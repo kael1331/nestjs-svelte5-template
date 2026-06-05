@@ -29,6 +29,10 @@ export class User {
   @ApiProperty({ enum: UserRole, default: UserRole.CLIENT, description: 'Rol jerárquico del usuario' })
   role: UserRole;
 
-  @Column({ select: false })
-  password: string;
+  @Column({ select: false, nullable: true })
+  password?: string;
+
+  @Column({ nullable: true, unique: true })
+  @ApiProperty({ description: 'ID único de Google del usuario', required: false })
+  googleId?: string;
 }

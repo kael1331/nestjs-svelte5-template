@@ -20,6 +20,43 @@
     }
   });
 
+  async function handleGoogleCredentialResponse(response: any) {
+    errorMessage = '';
+    successMessage = '';
+    const ok = await authStore.loginWithGoogle(response.credential);
+    if (ok && authStore.user) {
+      redirectToDashboard(authStore.user.role);
+    } else {
+      errorMessage = 'Error: No se pudo iniciar sesión con Google.';
+    }
+  }
+
+  $effect(() => {
+    if (typeof window !== 'undefined') {
+      const initGoogle = () => {
+        const win = window as any;
+        if (win.google && win.google.accounts) {
+          win.google.accounts.id.initialize({
+            client_id: '133806765476-l4vlgdm105bauerb58l1u0t8g8k020u3.apps.googleusercontent.com',
+            callback: handleGoogleCredentialResponse
+          });
+          
+          const btnContainer = document.getElementById('google-signin-btn');
+          if (btnContainer) {
+            win.google.accounts.id.renderButton(btnContainer, {
+              theme: 'outline',
+              size: 'large',
+              width: 360
+            });
+          }
+        } else {
+          setTimeout(initGoogle, 200);
+        }
+      };
+      initGoogle();
+    }
+  });
+
   function redirectToDashboard(role: string) {
     if (role === 'super_admin') {
       goto('/dashboard/super-admin');
@@ -131,7 +168,14 @@
     </p>
   {/if}
 
+  <!-- Botón de Google Sign-In -->
+  <div style="margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 20px; text-align: center;">
+    <p style="margin-bottom: 12px; color: #666; font-size: 14px;">O accede directamente con:</p>
+    <div id="google-signin-btn" style="display: flex; justify-content: center;"></div>
+  </div>
+
   <p style="margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; color: black;">
     <a href="/" style="color: blue;">Volver al Inicio</a>
   </p>
 </div>
+

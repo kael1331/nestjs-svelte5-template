@@ -85,6 +85,38 @@ class AuthStore {
     }
   }
 
+  async loginWithGoogle(googleToken: string): Promise<boolean> {
+    try {
+      const res = await fetch('http://localhost:3000/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: googleToken }),
+      });
+
+      if (!res.ok) return false;
+
+      const data = await res.json();
+      const token = data.access_token;
+      const decoded = this.decodeToken(token);
+
+      if (decoded) {
+        this.token = token;
+        this.user = {
+          id: decoded.sub,
+          email: decoded.email,
+          role: decoded.role,
+          name: decoded.name || 'Usuario',
+        };
+        localStorage.setItem('jwt_token', token);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error de login con Google:', error);
+      return false;
+    }
+  }
+
   async register(name: string, email: string, pass: string, role: string): Promise<boolean> {
     try {
       const res = await fetch('http://localhost:3000/users', {

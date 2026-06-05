@@ -1,6 +1,7 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { GoogleLoginDto } from './dto/google-login.dto';
 import { ApiTags, ApiCreatedResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from './auth.guard';
 import * as express from 'express';
@@ -17,6 +18,13 @@ export class AuthController {
     return this.authService.signIn(loginDto.email, loginDto.password);
   }
 
+  @Post('google')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ description: 'Inicio de sesión con Google exitoso. Retorna un JWT token.' })
+  async googleLogin(@Body() googleLoginDto: GoogleLoginDto) {
+    return this.authService.googleLogin(googleLoginDto.token);
+  }
+
   @Post('logout')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
@@ -28,3 +36,4 @@ export class AuthController {
     return { message: 'Sesión cerrada correctamente' };
   }
 }
+

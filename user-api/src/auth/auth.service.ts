@@ -5,6 +5,10 @@ import * as bcryptjs from 'bcryptjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RevokedToken } from './entities/revoked-token.entity';
+import { OAuth2Client } from 'google-auth-library';
+
+const GOOGLE_CLIENT_ID = '133806765476-l4vlgdm105bauerb58l1u0t8g8k020u3.apps.googleusercontent.com';
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 @Injectable()
 export class AuthService {
@@ -22,6 +26,10 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    if (!user.password) {
+      throw new UnauthorizedException('Este usuario no tiene contraseña establecida (inicia sesión con Google)');
+    }
+
     const isMatch = await bcryptjs.compare(pass, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Credenciales inválidas');
@@ -31,6 +39,43 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async googleLogin(token: string): Promise<{ access_token: string }> {
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        throw new UnauthorizedException('Token de Google inválido');
+      }
+
+      const { sub: googleId, email, name } = payload;
+
+      let user = await this.usersService.findOneByGoogleId(googleId);
+
+      if (!user) {
+        const existingUser = await this.usersService.findOneByEmail(email);
+        if (existingUser) {
+          user = await this.usersService.updateGoogleId(existingUser.id, googleId);
+        } else {
+          user = await this.usersService.createOAuthUser({
+            name: name || 'Usuario de Google',
+            email,
+            googleId,
+          });
+        }
+      }
+
+      const jwtPayload = { sub: user.id, email: user.email, role: user.role };
+      return {
+        access_token: await this.jwtService.signAsync(jwtPayload),
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Error al verificar autenticación con Google');
+    }
   }
 
   async revokeToken(token: string): Promise<void> {
@@ -46,3 +91,4 @@ export class AuthService {
     return !!found;
   }
 }
+

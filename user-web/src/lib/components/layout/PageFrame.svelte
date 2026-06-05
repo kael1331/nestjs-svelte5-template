@@ -44,7 +44,9 @@
     background: rgba(15, 23, 42, 0.3);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     box-shadow: 
       0 4px 30px rgba(0, 0, 0, 0.4),

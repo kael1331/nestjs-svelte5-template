@@ -64,12 +64,9 @@
 
 <style>
   .dashboard-card {
-    background: rgba(30, 41, 59, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 28px;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
+    padding: 0;
   }
 
   .dashboard-title {
@@ -116,10 +113,7 @@
   }
 
   .content-panel {
-    background: rgba(15, 23, 42, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 24px;
+    padding: 16px 0;
     line-height: 1.6;
     color: #cbd5e1;
   }
@@ -157,8 +151,7 @@
   }
 
   .crud-wrapper {
-    background: rgba(15, 23, 42, 0.15);
-    border-radius: 8px;
+    background: transparent;
   }
 
   .placeholder-text {

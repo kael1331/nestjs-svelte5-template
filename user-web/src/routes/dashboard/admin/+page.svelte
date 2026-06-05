@@ -32,12 +32,9 @@
 
 <style>
   .dashboard-card {
-    background: rgba(30, 41, 59, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 28px;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
+    padding: 0;
   }
 
   .dashboard-title {
